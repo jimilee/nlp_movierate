@@ -54,7 +54,7 @@ def getData(url):
 
 
 target = 'https://movie.naver.com/movie/bi/mi/point.nhn?code='
-num = range(47386,200000)
+num = range(50904,200000)#56997
 for i in num:
     url = target+str(i)
     print(url)
