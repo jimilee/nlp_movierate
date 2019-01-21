@@ -33,15 +33,16 @@ class TextCNN(object):
             with tf.name_scope("conv-maxpool-%s" % filter_size):
                 # Convolution Layer
                 filter_shape = [filter_size, embedding_size, 1, num_filters]
+                # W = 필터 행렬
                 W = tf.Variable(tf.truncated_normal(filter_shape, stddev=0.1), name="W")
                 b = tf.Variable(tf.constant(0.1, shape=[num_filters]), name="b")
                 conv = tf.nn.conv2d(
                     self.embedded_chars_expanded,
                     W,
                     strides=[1, 1, 1, 1],
-                    padding="VALID",
+                    padding="VALID",# VALID 패딩은 엣지패딩 없이 문장을 슬라이드 하여 narrow합성곱을 수행
                     name="conv")
-                # Apply nonlinearity
+                # Apply nonlinearity/ h = 합성곱 출력에 ReLU를 적용한 결과.
                 h = tf.nn.relu(tf.nn.bias_add(conv, b), name="relu")
                 # Maxpooling over the outputs
                 pooled = tf.nn.max_pool(
@@ -50,7 +51,7 @@ class TextCNN(object):
                     strides=[1, 1, 1, 1],
                     padding='VALID',
                     name="pool")
-                pooled_outputs.append(pooled)
+                pooled_outputs.append(pooled)#[batch_size,1,1,num_filters]
 
         # Combine all the pooled features
         num_filters_total = num_filters * len(filter_sizes)
