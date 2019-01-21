@@ -20,9 +20,9 @@ class MultiClassDataLoader(object):
 
 
     def define_flags(self):
-        self.__flags.DEFINE_string("train_data_file", "./data/train.train", "Data source for the training data.")
-        self.__flags.DEFINE_string("dev_data_file", "./data/kkk.dev", "Data source for the cross validation data.")
-        self.__flags.DEFINE_string("class_data_file", "./data/kkk.cls", "Data source for the class list.")
+        self.__flags.DEFINE_string("train_data_file", "./data/train.txt", "Data source for the training data.")
+        self.__flags.DEFINE_string("dev_data_file", "./data/dev.txt", "Data source for the cross validation data.")
+        self.__flags.DEFINE_string("class_data_file", "./data/class.txt", "Data source for the class list.")
 
     def prepare_data(self):
         self.__resolve_params()
@@ -65,7 +65,7 @@ class MultiClassDataLoader(object):
     def __load_data_and_labels(self, data_file):
         x_text = []
         y = []
-        with open(data_file, 'r',encoding='cp949') as tsvin:
+        with open(data_file, 'r',encoding='utf-8') as tsvin:
             classes = self.__classes()
             one_hot_vectors = np.eye(len(classes), dtype=int)
             class_vectors = {}
@@ -81,7 +81,7 @@ class MultiClassDataLoader(object):
     def __classes(self):
         self.__resolve_params()
         if self.__classes_cache is None:
-            with open(self.__class_data_file, 'r',encoding='cp949') as catin:
+            with open(self.__class_data_file, 'r',encoding='utf-8') as catin:
                 classes = list(catin.readlines())
                 self.__classes_cache = [s.strip() for s in classes]
         return self.__classes_cache

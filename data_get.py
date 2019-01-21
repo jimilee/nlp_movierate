@@ -1,13 +1,14 @@
 from konlpy.tag import Kkma
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+from urllib.request import HTTPError
 #-*- coding: utf-8 -*-
 kkma = Kkma() #Konlpy
 
 #가져온 데이터에서 명사추출
 def Data_Preprocessing():
     file = open('data.txt','r')
-    file_result = open('./data/train.train','w')
+    file_result = open('./data/train.txt','w',encoding='utf-8')
 
     for line in file:
         nouns = kkma.nouns(line.split(',')[0])
@@ -28,31 +29,37 @@ def setLabel(score):
 
 def getData(url):
 
-    webpage = urlopen(url)
-    soup = BeautifulSoup(webpage, 'html.parser')
-    file = open('data.txt','a')
-    sentence = soup.select('div.reporter_line > dl > dd')
-    score = soup.select('div.re_score_grp > div > div > em')
+    try:
+        webpage = urlopen(url)
+        soup = BeautifulSoup(webpage, 'html.parser')
+        file = open('data.txt','a')
+        sentence = soup.select('div.reporter_line > dl > dd')
+        score = soup.select('div.re_score_grp > div > div > em')
 
-    for score_value, value in zip(score, sentence):
-        print(value.text.strip(), score_value.text.strip())
-        file.writelines(value.text.strip().replace(',', ' ') + setLabel(float(score_value.text.strip())))
+        for score_value, value in zip(score, sentence):
+            print(value.text.strip(), score_value.text.strip())
+            file.writelines(value.text.strip().replace(',', ' ') + setLabel(float(score_value.text.strip())))
 
-    small_sc = soup.select('li > div.star_score > em')
-    small_se = soup.select('div.score_reple > p')
+        small_sc = soup.select('li > div.star_score > em')
+        small_se = soup.select('div.score_reple > p')
 
-    for score_value, value in zip(small_sc, small_se):
-        print(value.text.strip(), score_value.text.strip())
-        file.writelines(value.text.strip().replace(',', ' ') + setLabel(float(score_value.text.strip())))
-    file.close()
+        for score_value, value in zip(small_sc, small_se):
+            print(value.text.strip(), score_value.text.strip())
+            file.writelines(value.text.strip().replace(',', ' ') + setLabel(float(score_value.text.strip())))
+        file.close()
+    except HTTPError as e:
+        print(e)
+    else:
+        return None
 
-#
-file = open('url.txt','r')
 
-for url in file:
+target = 'https://movie.naver.com/movie/bi/mi/point.nhn?code='
+num = range(47386,200000)
+for i in num:
+    url = target+str(i)
     print(url)
     getData(url)
-file.close()
+
 
 Data_Preprocessing()
 

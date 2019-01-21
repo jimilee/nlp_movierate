@@ -1,6 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: cp949 -*-
-
+#-*- coding: utf-8 -*-
 from tensorflow.contrib import learn
 
 class WordDataProcessor(object):
@@ -17,7 +16,7 @@ class WordDataProcessor(object):
 
     def clean_data(_, string):
         """
-        ÇüÅÂ¼Ò(DHA) ºĞ¼®µÈ °á°ú·Î ÇĞ½ÀÇÒ °ÍÀÌ¹Ç·Î µ¥ÀÌÅ¸ Á¤Á¦´Â ÇÊ¿ä ¾øÀ½
+        í˜•íƒœì†Œ(DHA) ë¶„ì„ëœ ê²°ê³¼ë¡œ í•™ìŠµí•  ê²ƒì´ë¯€ë¡œ ë°ì´íƒ€ ì •ì œëŠ” í•„ìš” ì—†ìŒ
         """
         if ":" not in string:
             string = string.strip().lower()
