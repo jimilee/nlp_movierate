@@ -11,10 +11,14 @@ def Data_Preprocessing():
     file_result = open('./data/train.txt','w',encoding='utf-8')
 
     for line in file:
-        nouns = kkma.nouns(line.split(',')[0])
-        print(nouns)
-        if(nouns != []):
-            file_result.write(' '.join(nouns) +str(','+line.split(',')[1]))
+        try:
+            nouns = kkma.nouns(line.split(',')[0])
+            print(nouns)
+            if(nouns != []):
+                file_result.write(' '.join(nouns) +str(','+line.split(',')[1]))
+        except:
+            file_result.writelines("")
+            print("pass")
 
 #1 2 3 4 | 5 6 | 7 8 | 9 10 점수별
 def setLabel(score):
@@ -24,7 +28,7 @@ def setLabel(score):
         return ',추천\n'
     if 7>score>=5:
         return ',보통\n'
-    if 5>score>=1:
+    if 5>score>=0:
         return ',비추천\n'
 
 def getData(url):
@@ -38,14 +42,14 @@ def getData(url):
 
         for score_value, value in zip(score, sentence):
             print(value.text.strip(), score_value.text.strip())
-            file.writelines(value.text.strip().replace(',', ' ') + setLabel(float(score_value.text.strip())))
+            file.writelines(value.text.strip().replace(',', ' ').replace('\n',' ') + setLabel(float(score_value.text.strip())))
 
         small_sc = soup.select('li > div.star_score > em')
         small_se = soup.select('div.score_reple > p')
 
         for score_value, value in zip(small_sc, small_se):
             print(value.text.strip(), score_value.text.strip())
-            file.writelines(value.text.strip().replace(',', ' ') + setLabel(float(score_value.text.strip())))
+            file.writelines(value.text.strip().replace(',', ' ').replace('\n',' ') + setLabel(float(score_value.text.strip())))
         file.close()
     except HTTPError as e:
         print(e)
@@ -54,11 +58,11 @@ def getData(url):
 
 
 target = 'https://movie.naver.com/movie/bi/mi/point.nhn?code='
-num = range(50904,200000)#56997
-for i in num:
-    url = target+str(i)
-    print(url)
-    getData(url)
+num = range(156742,200000)
+# for i in num:
+#     url = target+str(i)
+#     print(url)
+#     getData(url)
 
 
 Data_Preprocessing()
