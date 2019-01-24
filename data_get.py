@@ -8,7 +8,7 @@ kkma = Kkma() #Konlpy
 #가져온 데이터에서 명사추출
 def Data_Preprocessing():
     file = open('data.txt','r')
-    file_result = open('./data/train.txt','w',encoding='utf-8')
+    file_result = open('dataset.txt','w',encoding='utf-8')
 
     for line in file:
         try:
@@ -58,11 +58,11 @@ def getData(url):
 
 
 target = 'https://movie.naver.com/movie/bi/mi/point.nhn?code='
-num = range(156742,200000)
-# for i in num:
-#     url = target+str(i)
-#     print(url)
-#     getData(url)
+num = range(0,200000)
+for i in num:
+    url = target+str(i)
+    print(url)
+    getData(url)
 
 
 Data_Preprocessing()
