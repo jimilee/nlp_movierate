@@ -9,7 +9,7 @@ import data_helpers
 from multi_class_data_loader import MultiClassDataLoader
 from word_data_processor import WordDataProcessor
 import csv
-os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+
 # Parameters
 # ==================================================
 
@@ -26,8 +26,7 @@ data_loader = MultiClassDataLoader(tf.flags, WordDataProcessor())
 data_loader.define_flags()
 
 FLAGS = tf.flags.FLAGS
-import sys
-FLAGS(sys.argv)
+FLAGS._parse_flags()
 print("\nParameters:")
 for attr, value in sorted(FLAGS.__flags.items()):
     print("{}={}".format(attr.upper(), value))

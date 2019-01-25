@@ -10,13 +10,13 @@ def Equalize(type, dev):
     for sc in score:
         for i in range(0, int(type(counts) * dev/10)):
             try:
-                file.write(sc[i])
+                file.write(sc[randint(0,int(type(counts) * dev/10))])
             except: #범위를 넘는 경우, 자신의 배열에서 랜덤 복사
                 file.write(sc[randint(0,len(sc)-1)])
 
         for j in range(int(type(counts)*dev/10 + 1), type(counts)):
             try:
-                file_dev.write(sc[j])
+                file_dev.write(sc[randint(int(type(counts)*dev/10 + 1), type(counts))])
             except:
                 file_dev.write(sc[randint(0,len(sc)-1)])
 
@@ -38,4 +38,4 @@ def DataSet():
     print("counts= 강추 :", len(strong)," 추천 : ", len(good), " 보통 : ", len(normal), " 비추천 : ", len(bad))
 
 DataSet()
-Equalize(max,8)
+Equalize(max,7)
