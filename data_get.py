@@ -1,9 +1,13 @@
 from konlpy.tag import Kkma
+from konlpy.tag import Hannanum
+from konlpy.tag import Mecab
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from urllib.request import HTTPError
 #-*- coding: utf-8 -*-
 kkma = Kkma() #Konlpy
+hannanum = Hannanum()
+#mecab = Mecab()
 
 #가져온 데이터에서 명사추출
 def Data_Preprocessing():
@@ -12,7 +16,7 @@ def Data_Preprocessing():
 
     for line in file:
         try:
-            nouns = kkma.nouns(line.split(',')[0])
+            nouns = hannanum.nouns(line.split(',')[0])
             print(nouns)
             if(nouns != []):
                 file_result.write(' '.join(nouns) +str(','+line.split(',')[1]))
@@ -57,12 +61,12 @@ def getData(url):
         return None
 
 
-target = 'https://movie.naver.com/movie/bi/mi/point.nhn?code='
-num = range(0,200000)
-for i in num:
-    url = target+str(i)
-    print(url)
-    getData(url)
+# target = 'https://movie.naver.com/movie/bi/mi/point.nhn?code='
+# num = range(0,200000)
+# for i in num:
+#     url = target+str(i)
+#     print(url)
+#     getData(url)
 
 
 Data_Preprocessing()

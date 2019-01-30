@@ -1,5 +1,6 @@
 #def DataSet  데이터 분류, train, eval실행
 from random import randint
+
 strong, good, normal, bad = [], [], [], []
 
 def Equalize(type, dev):
@@ -10,17 +11,18 @@ def Equalize(type, dev):
     for sc in score:
         for i in range(0, int(type(counts) * dev/10)):
             try:
-                file.write(sc[randint(0,int(type(counts) * dev/10))])
+                file.write(sc[i])
             except: #범위를 넘는 경우, 자신의 배열에서 랜덤 복사
                 file.write(sc[randint(0,len(sc)-1)])
 
         for j in range(int(type(counts)*dev/10 + 1), type(counts)):
             try:
-                file_dev.write(sc[randint(int(type(counts)*dev/10 + 1), type(counts))])
+                file_dev.write(sc[j])
             except:
-                file_dev.write(sc[randint(0,len(sc)-1)])
+                file_dev.write(sc[randint(0, len(sc)-1)])
 
-
+    file.close()
+    file_dev.close()
 def DataSet():
     file = open('dataset.txt', 'r',encoding='utf-8')
 
@@ -36,6 +38,8 @@ def DataSet():
             bad.append(line)
 
     print("counts= 강추 :", len(strong)," 추천 : ", len(good), " 보통 : ", len(normal), " 비추천 : ", len(bad))
+    file.close()
+
 
 DataSet()
 Equalize(max,7)

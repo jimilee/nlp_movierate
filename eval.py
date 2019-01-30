@@ -1,15 +1,39 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-import json
-
+import sys
 import tensorflow as tf
 import numpy as np
 import os
 import data_helpers
 from multi_class_data_loader import MultiClassDataLoader
 from word_data_processor import WordDataProcessor
+from konlpy.tag import Kkma
+kkma = Kkma() #Konlpy
 import csv
 
+# Test
+# ==================================================
+
+def Test():
+    file = open('./data/test.txt','w',encoding='utf-8')
+    global report
+    global nouns
+    loop = True
+    while loop:
+        report = input("한줄평 : ")
+        if report != "":
+            tf.flags.DEFINE_boolean("eval_test", True, "Evaluate on one test data")
+            nouns = kkma.nouns(report)
+            if (nouns != []):
+                file.write(' '.join(nouns) + str(',추천'))
+            else:
+                print("명사를 찾지 못하였습니다. 다시 한번 한줄평을 입력해 주세요...")
+        else:
+            loop = False
+    file.close()
+
+
+Test()
 # Parameters
 # ==================================================
 
@@ -17,6 +41,7 @@ import csv
 tf.flags.DEFINE_integer("batch_size", 64, "Batch Size (default: 64)")
 tf.flags.DEFINE_string("checkpoint_dir", "", "Checkpoint directory from training run")
 tf.flags.DEFINE_boolean("eval_train", False, "Evaluate on all training data")
+
 
 # Misc Parameters
 tf.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft device placement")
@@ -26,16 +51,21 @@ data_loader = MultiClassDataLoader(tf.flags, WordDataProcessor())
 data_loader.define_flags()
 
 FLAGS = tf.flags.FLAGS
-FLAGS._parse_flags()
+FLAGS(sys.argv)
 print("\nParameters:")
 for attr, value in sorted(FLAGS.__flags.items()):
     print("{}={}".format(attr.upper(), value))
 print("")
 
-if FLAGS.eval_train:
+if FLAGS.eval_train:#train 상태 일 때
     x_raw, y_test = data_loader.load_data_and_labels()
     y_test = np.argmax(y_test, axis=1)
-else:
+
+elif FLAGS.eval_test: #test 상태 일 때
+    x_raw, y_test = data_loader.load_test_data_labels()
+    y_test = np.argmax(y_test, axis=1)
+
+else:#eval
     x_raw, y_test = data_loader.load_dev_data_and_labels()
     y_test = np.argmax(y_test, axis=1)
 
@@ -86,9 +116,20 @@ with graph.as_default():
 
 # Print accuracy if y_test is defined
 if y_test is not None:
-    correct_predictions = float(sum(all_predictions == y_test))
-    print("Total number of test examples: {}".format(len(y_test)))
-    print("Accuracy: {:g}".format(correct_predictions/float(len(y_test))))
+    if FLAGS.eval_test:#test문자가 있을때
+        print(report + " >> " + str(nouns) + str(all_predictions[0]))
+        if all_predictions[0] == 0.0:
+            print("강추!!")
+        elif all_predictions[0] == 1.0:
+            print("추천!")
+        elif all_predictions[0] == 2.0:
+            print("보통..")
+        else:
+            print("비추천ㄱㅡ")
+    else:
+        correct_predictions = float(sum(all_predictions == y_test))
+        print("Total number of test examples: {}".format(len(y_test)))
+        print("Accuracy: {:g}".format(correct_predictions/float(len(y_test))))
 
 # Save the evaluation to a csv
 class_predictions = data_loader.class_labels(all_predictions.astype(int))

@@ -17,12 +17,14 @@ class MultiClassDataLoader(object):
         self.__dev_data_file = None
         self.__class_data_file = None
         self.__classes_cache = None
+        self.__test_file = None
 
 
     def define_flags(self):
         self.__flags.DEFINE_string("train_data_file", "./data/train.txt", "Data source for the training data.")
         self.__flags.DEFINE_string("dev_data_file", "./data/dev.txt", "Data source for the cross validation data.")
         self.__flags.DEFINE_string("class_data_file", "./data/class.txt", "Data source for the class list.")
+        self.__flags.DEFINE_string("test_file", "./data/test.txt", "Data source for test.")
 
     def prepare_data(self):
         self.__resolve_params()
@@ -52,6 +54,11 @@ class MultiClassDataLoader(object):
     def load_dev_data_and_labels(self):
         self.__resolve_params()
         x_dev, y_dev = self.__load_data_and_labels(self.__dev_data_file)
+        return [x_dev, y_dev]
+
+    def load_test_data_labels(self):#테스트 파일 가져오기
+        self.__resolve_params()
+        x_dev, y_dev = self.__load_data_and_labels(self.__test_file)
         return [x_dev, y_dev]
 
     def load_data_and_labels(self):
@@ -91,3 +98,4 @@ class MultiClassDataLoader(object):
             self.__train_data_file = self.__flags.FLAGS.train_data_file
             self.__dev_data_file = self.__flags.FLAGS.dev_data_file
             self.__class_data_file = self.__flags.FLAGS.class_data_file
+            self.__test_file = self.__flags.FLAGS.test_file
