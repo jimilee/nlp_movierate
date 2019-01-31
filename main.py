@@ -2,6 +2,23 @@
 from random import randint
 
 strong, good, normal, bad = [], [], [], []
+def DevData():
+    files = ['./data/data1.txt','./data/data2.txt','./data/data3.txt','./data/data4.txt','./data/data5.txt']
+    score = [strong, good, normal, bad]
+    start = [0, int(len(strong)/5), int(len(strong)/5*2), int(len(strong)/5*3), int(len(strong)/5*4)]
+    cnt = 0
+    for name in files:
+        file = open(name,'w',encoding='utf-8')
+        for sc in score:
+            for line in range(start[cnt], start[cnt]+1905):
+                try:
+                    file.write(sc[line])
+                except:
+                    file.write(sc[randint(start[cnt], start[cnt]+1905)])
+        cnt += 1
+
+
+
 
 def Equalize(type, dev):
     counts =[len(strong), len(good), len(normal), len(bad)]
@@ -24,7 +41,7 @@ def Equalize(type, dev):
     file.close()
     file_dev.close()
 def DataSet():
-    file = open('dataset.txt', 'r',encoding='utf-8')
+    file = open('./data/train.txt', 'r',encoding='utf-8')
 
     for line in file:
         cls = line.split(',')[1]
@@ -42,4 +59,5 @@ def DataSet():
 
 
 DataSet()
-Equalize(max,7)
+#Equalize(max,10)
+DevData()

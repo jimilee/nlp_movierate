@@ -22,7 +22,7 @@ class MultiClassDataLoader(object):
 
     def define_flags(self):
         self.__flags.DEFINE_string("train_data_file", "./data/train.txt", "Data source for the training data.")
-        self.__flags.DEFINE_string("dev_data_file", "./data/dev.txt", "Data source for the cross validation data.")
+        self.__flags.DEFINE_string("dev_data_file", "./data/data5.txt", "Data source for the cross validation data.")
         self.__flags.DEFINE_string("class_data_file", "./data/class.txt", "Data source for the class list.")
         self.__flags.DEFINE_string("test_file", "./data/test.txt", "Data source for test.")
 

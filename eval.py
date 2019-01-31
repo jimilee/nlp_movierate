@@ -26,10 +26,12 @@ def Test():
             nouns = kkma.nouns(report)
             if (nouns != []):
                 file.write(' '.join(nouns) + str(',추천'))
+                loop = False
             else:
                 print("명사를 찾지 못하였습니다. 다시 한번 한줄평을 입력해 주세요...")
         else:
             loop = False
+            tf.flags.DEFINE_boolean("eval_test", False, "Evaluate on one test data")
     file.close()
 
 
@@ -52,10 +54,10 @@ data_loader.define_flags()
 
 FLAGS = tf.flags.FLAGS
 FLAGS(sys.argv)
-print("\nParameters:")
-for attr, value in sorted(FLAGS.__flags.items()):
-    print("{}={}".format(attr.upper(), value))
-print("")
+# print("\nParameters:")
+# for attr, value in sorted(FLAGS.__flags.items()):
+#     print("{}={}".format(attr.upper(), value))
+# print("")
 
 if FLAGS.eval_train:#train 상태 일 때
     x_raw, y_test = data_loader.load_data_and_labels()
@@ -80,7 +82,6 @@ vocab_path = os.path.join(FLAGS.checkpoint_dir, "..", "vocab")
 vocab_processor = data_loader.restore_vocab_processor(vocab_path)
 x_test = np.array(list(vocab_processor.transform(x_raw)))
 
-print("\nEvaluating...\n")
 
 # Evaluation
 # ==================================================
@@ -117,7 +118,7 @@ with graph.as_default():
 # Print accuracy if y_test is defined
 if y_test is not None:
     if FLAGS.eval_test:#test문자가 있을때
-        print(report + " >> " + str(nouns) + str(all_predictions[0]))
+        print(report + " >> " + str(nouns))
         if all_predictions[0] == 0.0:
             print("강추!!")
         elif all_predictions[0] == 1.0:
@@ -131,10 +132,10 @@ if y_test is not None:
         print("Total number of test examples: {}".format(len(y_test)))
         print("Accuracy: {:g}".format(correct_predictions/float(len(y_test))))
 
-# Save the evaluation to a csv
-class_predictions = data_loader.class_labels(all_predictions.astype(int))
-predictions_human_readable = np.column_stack((np.array(x_raw), class_predictions))
-out_path = os.path.join(FLAGS.checkpoint_dir, "../../../", "prediction.csv")
-print("Saving evaluation to {0}".format(out_path))
-with open(out_path, 'w') as f:
-    csv.writer(f).writerows(predictions_human_readable)
+        # Save the evaluation to a csv
+        class_predictions = data_loader.class_labels(all_predictions.astype(int))
+        predictions_human_readable = np.column_stack((np.array(x_raw), class_predictions))
+        out_path = os.path.join(FLAGS.checkpoint_dir, "../../../", "prediction.csv")
+        print("Saving evaluation to {0}".format(out_path))
+        with open(out_path, 'w') as f:
+            csv.writer(f).writerows(predictions_human_readable)

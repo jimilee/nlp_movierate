@@ -1,13 +1,12 @@
 from konlpy.tag import Kkma
 from konlpy.tag import Hannanum
-from konlpy.tag import Mecab
+from konlpy.tag import _komoran
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from urllib.request import HTTPError
 #-*- coding: utf-8 -*-
 kkma = Kkma() #Konlpy
 hannanum = Hannanum()
-#mecab = Mecab()
 
 #가져온 데이터에서 명사추출
 def Data_Preprocessing():

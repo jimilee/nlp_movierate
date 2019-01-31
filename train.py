@@ -11,6 +11,7 @@ from text_cnn import TextCNN
 from multi_class_data_loader import MultiClassDataLoader
 from word_data_processor import WordDataProcessor
 
+
 # Parameters
 # ==================================================
 
@@ -23,7 +24,7 @@ tf.flags.DEFINE_float("l2_reg_lambda", 1000.0, "L2 regularizaion lambda (default
 
 # Training parameters
 tf.flags.DEFINE_integer("batch_size", 64, "Batch Size (default: 64)")
-tf.flags.DEFINE_integer("num_epochs", 1000, "Number of training epochs (default: 200)")
+tf.flags.DEFINE_integer("num_epochs", 50, "Number of training epochs (default: 200)")
 tf.flags.DEFINE_integer("evaluate_every", 100, "Evaluate model on dev set after this many steps (default: 100)")
 tf.flags.DEFINE_integer("checkpoint_every", 100, "Save model after this many steps (default: 100)")
 # Misc Parameters
@@ -88,7 +89,7 @@ with tf.Graph().as_default():
         grad_summaries_merged = tf.summary.merge(grad_summaries)
 
         # Output directory for models and summaries
-        timestamp = str(int(time.time()))
+        timestamp = str(1548896116)
         out_dir = os.path.abspath(os.path.join(os.path.curdir, "runs", timestamp))
         print("Writing to {}\n".format(out_dir))
 
@@ -98,23 +99,23 @@ with tf.Graph().as_default():
 
         # Train Summaries
         train_summary_op = tf.summary.merge([loss_summary, acc_summary, grad_summaries_merged])
-        train_summary_dir = os.path.join(out_dir, "summaries", "train")
+        train_summary_dir = os.path.join(out_dir, "summaries4", "train")
         train_summary_writer = tf.summary.FileWriter(train_summary_dir, sess.graph)
 
         # Dev summaries
         dev_summary_op = tf.summary.merge([loss_summary, acc_summary])
-        dev_summary_dir = os.path.join(out_dir, "summaries", "dev")
+        dev_summary_dir = os.path.join(out_dir, "summaries4", "dev")
         dev_summary_writer = tf.summary.FileWriter(dev_summary_dir, sess.graph)
 
         # Checkpoint directory. Tensorflow assumes this directory already exists so we need to create it
-        checkpoint_dir = os.path.abspath(os.path.join(out_dir, "checkpoints"))
+        checkpoint_dir = os.path.abspath(os.path.join(out_dir, "checkpoints4"))
         checkpoint_prefix = os.path.join(checkpoint_dir, "model")
         if not os.path.exists(checkpoint_dir):
             os.makedirs(checkpoint_dir)
         saver = tf.train.Saver(tf.global_variables())
 
         # Write vocabulary
-        vocab_processor.save(os.path.join(out_dir, "vocab"))
+        vocab_processor.save(os.path.join(out_dir, "vocab4"))
 
         # Initialize all variables
         sess.run(tf.global_variables_initializer())
