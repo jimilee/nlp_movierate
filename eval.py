@@ -22,10 +22,10 @@ def Test():
     while loop:
         report = input("한줄평 : ")
         if report != "":
-            tf.flags.DEFINE_boolean("eval_test", True, "Evaluate on one test data")
             nouns = kkma.nouns(report)
             if (nouns != []):
                 file.write(' '.join(nouns) + str(',추천'))
+                tf.flags.DEFINE_boolean("eval_test", True, "Evaluate on one test data")
                 loop = False
             else:
                 print("명사를 찾지 못하였습니다. 다시 한번 한줄평을 입력해 주세요...")
